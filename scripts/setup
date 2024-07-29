@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+. "$(dirname $0)/.common"
+
+if [ ! -d "${BASE_PATH}/env" ]; then
+  python3 -m venv "${BASE_PATH}/env"
+fi
+
+if [ -z "${VIRTUAL_ENV}" ]; then
+  . env/bin/activate
+fi
+
+pip install -U pip
+pip install -r ./requirements/development.txt

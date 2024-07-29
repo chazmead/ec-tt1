@@ -1,0 +1,7 @@
+apiVersion: v2
+version: "0.0.0"
+name: edge-connect
+maintainers:
+  - name: Charles Mead
+    email: charles@cmead.uk
+dependencies:

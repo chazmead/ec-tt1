@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+. "$(dirname $0)/.common"
+
+flake8 "$SRC_PATH" "$TEST_PATH"
+isort --check-only $SRC_PATH $TEST_PATH
+black --check $SRC_PATH $TEST_PATH
+MYPYPATH="${SRC_PATH}" mypy -p edgeconnect -p tests -p alphavantage

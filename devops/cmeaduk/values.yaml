@@ -1,0 +1,5 @@
+service:
+  loadBalancerIP: 34.142.43.148
+
+http:
+  logLevel: DEBUG

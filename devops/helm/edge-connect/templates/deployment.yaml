@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: edgeconnect
+  annotations:
+    checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") $ | sha256sum }}
+  name: {{ $.Release.Name }}-{{ $.Chart.Name }}-http
+spec:
+  selector:
+    matchLabels:
+     run: {{ $.Release.Name }}-{{ $.Chart.Name }}-http
+  template:
+    metadata:
+      labels:
+        run: {{ $.Release.Name }}-{{ $.Chart.Name }}-http
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 300
+      containers:
+      - name: {{ $.Release.Name }}-{{ $.Chart.Name }}-http
+        resources:
+          requests:
+            cpu: {{ $.Values.http.resources.requests.cpu | quote }}
+            memory: {{ $.Values.http.resources.requests.memory | quote }}
+          limits:
+            cpu: {{ $.Values.http.resources.limits.cpu | quote }}
+            memory: {{ $.Values.http.resources.limits.memory | quote }}
+        imagePullPolicy: Always
+        image: {{ $.Values.registry }}/edgeconnect:{{ $.Chart.Version }}
+        readinessProbe:
+          failureThreshold: 1
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 5
+          httpGet:
+            path: "/healthz/readiness"
+            port: http
+            scheme: HTTP
+        livenessProbe:
+          initialDelaySeconds: 120
+          failureThreshold: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 10
+          httpGet:
+            path: "/healthz/liveness"
+            port: http
+            scheme: HTTP
+        env:
+        - name: SERVER_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: SERVER_PORT
+          value: {{ .Values.http.serverPort | quote }}
+        - name: SERVER_CONCURRENCY_LIMIT
+          value: {{ .Values.http.serverConcurrencyLimit | quote }}
+        - name: ROOT_URI_PATH
+          value: {{ .Values.http.rootUriPath | quote }}
+        - name: LOG_LEVEL
+          value: {{ .Values.http.logLevel | quote }}
+        envFrom:
+        - configMapRef:
+            name: {{ $.Release.Name }}-{{ $.Chart.Name }}-config
+        ports:
+        - name: http
+          containerPort: {{ .Values.http.serverPort }}

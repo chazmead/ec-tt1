@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+. "$(dirname $0)/.common"
+
+IMAGE_TAG="${IMAGE_REPO}/${PROJECT_NAME}:${VERSION}"
+
+sudo docker build -t "${IMAGE_TAG}" "${BASE_PATH}" &&
+echo "=== STARTING CONTAINER"
+sudo docker run "${IMAGE_TAG}"

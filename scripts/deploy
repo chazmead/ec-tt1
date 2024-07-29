@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+. "$(dirname $0)/.common"
+
+DEPLOY_ENV=${1:-"cmeaduk"}
+RELEASE_NAME="edgeconnect"
+
+docker build -t "${IMAGE_TAG}" "${BASE_PATH}" &&
+docker push "${IMAGE_TAG}"
+
+kubectl create namespace "${DEPLOY_ENV}" || true
+
+helm upgrade "${RELEASE_NAME}" \
+  --install \
+  --timeout "2400s" \
+  --wait \
+  --namespace ${DEPLOY_ENV} \
+  -f "devops/${DEPLOY_ENV}/values.yaml" \
+  -f "devops/${DEPLOY_ENV}/secrets.yaml" \
+  ./devops/helm/edge-connect

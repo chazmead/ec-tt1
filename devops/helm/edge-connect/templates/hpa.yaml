@@ -1,0 +1,12 @@
+kind: HorizontalPodAutoscaler
+apiVersion: autoscaling/v1
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}-http
+spec:
+  minReplicas: {{ .Values.http.minReplicas }}
+  maxReplicas: {{ .Values.http.maxReplicas }}
+  targetCPUUtilizationPercentage: {{ .Values.http.targetCPUUtilizationPercentage }}
+  scaleTargetRef:
+    kind: Deployment
+    apiVersion: apps/v1
+    name: {{ .Release.Name }}-{{ .Chart.Name }}-http

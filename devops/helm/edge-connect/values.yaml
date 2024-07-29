@@ -1,0 +1,26 @@
+registry: "europe-west2-docker.pkg.dev/exalted-cairn-431009-q4/cmeaduk"
+envType: "PROD"
+
+service:
+  loadBalancerIP: 0.0.0.0
+
+alphaVantage:
+  apiKey: "REPLACEME"
+
+http:
+  serverPort: 8000
+  serverConcurrencyLimit: 50
+  rootUriPath: ""
+  logLevel: INFO
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 1
+      memory: 1024Mi
+
+  targetCPUUtilizationPercentage: 60
+  minReplicas: 1
+  maxReplicas: 10

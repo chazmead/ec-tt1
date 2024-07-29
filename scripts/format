@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+. "$(dirname $0)/.common"
+
+autoflake8 $SRC_PATH $TEST_PATH \
+  --in-place \
+  --recursive \
+  --exit-zero-even-if-changed
+black $SRC_PATH $TEST_PATH
+isort $SRC_PATH $TEST_PATH

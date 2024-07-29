@@ -1,0 +1,13 @@
+# vim: ft=bash
+
+set -o errexit
+
+IMAGE_REPO=europe-west2-docker.pkg.dev/exalted-cairn-431009-q4/cmeaduk
+PROJECT_NAME=edgeconnect
+BASE_PATH=$(realpath "$(dirname $0)/..")
+SRC_PATH="${BASE_PATH}/src"
+TEST_PATH="${BASE_PATH}/tests"
+VERSION="0.0.0"
+IMAGE_TAG="${IMAGE_REPO}/${PROJECT_NAME}:${VERSION}"
+
+export PYTHONPATH="${SRC_PATH}"
